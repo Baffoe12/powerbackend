@@ -7,12 +7,15 @@ const Appliance = require('./models/Appliance');
 const User = require('./models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sensorDataEndpoint = require('./sensorDataEndpoint');
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+sensorDataEndpoint(app);
 
 // Signup endpoint
 app.post('/api/signup', async (req, res) => {
