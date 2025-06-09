@@ -165,6 +165,23 @@ app.delete('/api/appliances/:id', async (req, res) => {
   }
 });
 
+// Power cut command endpoint
+app.post('/api/appliances/:id/power-cut', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const appliance = await Appliance.findByPk(id);
+    if (!appliance) {
+      return res.status(404).json({ error: 'Appliance not found' });
+    }
+    // Simulate power cut action, e.g., update appliance status or send command to device
+    // For now, just log and respond success
+    console.log(`Power cut command received for appliance ID: ${id}`);
+    res.json({ message: `Power cut command executed for appliance ID: ${id}` });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to execute power cut command' });
+  }
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`Backend server running on port ${port}`);
 });
