@@ -182,6 +182,96 @@ app.post('/api/appliances/:id/power-cut', async (req, res) => {
   }
 });
 
+// Get historical power and cost data for an appliance
+app.get('/api/appliances/:id/history', async (req, res) => {
+  const id = req.params.id;
+  try {
+    // Placeholder: fetch historical data from database or other source
+    // Example response format: [{ timestamp: '2024-01-01T00:00:00Z', power: 100, cost: 5 }, ...]
+    const history = [
+      { timestamp: '2024-01-01T00:00:00Z', power: 100, cost: 5 },
+      { timestamp: '2024-01-02T00:00:00Z', power: 110, cost: 5.5 },
+      { timestamp: '2024-01-03T00:00:00Z', power: 90, cost: 4.5 },
+    ];
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch historical data' });
+  }
+});
+
+// Control appliance on/off
+app.post('/api/appliances/:id/control', async (req, res) => {
+  const id = req.params.id;
+  const { action } = req.body; // expected 'on' or 'off'
+  if (!['on', 'off'].includes(action)) {
+    return res.status(400).json({ error: 'Invalid action' });
+  }
+  try {
+    const appliance = await Appliance.findByPk(id);
+    if (!appliance) {
+      return res.status(404).json({ error: 'Appliance not found' });
+    }
+    // Simulate control action, e.g., send command to device
+    console.log(`Control command received for appliance ID: ${id}, action: ${action}`);
+    res.json({ message: `Appliance ${id} turned ${action}` });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to control appliance' });
+  }
+});
+
+// Get anomaly detection details and logs
+app.get('/api/anomalies', async (req, res) => {
+  try {
+    // Placeholder: fetch anomaly logs from database or other source
+    const anomalies = [
+      { id: 1, applianceId: 1, timestamp: '2024-01-02T10:00:00Z', description: 'High power usage detected' },
+      { id: 2, applianceId: 2, timestamp: '2024-01-03T14:30:00Z', description: 'Voltage spike detected' },
+    ];
+    res.json(anomalies);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch anomaly data' });
+  }
+});
+
+// Export reports (PDF/CSV)
+app.get('/api/export-report', async (req, res) => {
+  try {
+    // Placeholder: generate report and send as file
+    const reportData = 'Sample report data';
+    res.setHeader('Content-Disposition', 'attachment; filename=report.csv');
+    res.setHeader('Content-Type', 'text/csv');
+    res.send(reportData);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to export report' });
+  }
+});
+
+// Get custom thresholds
+app.get('/api/thresholds', async (req, res) => {
+  try {
+    // Placeholder: fetch thresholds from database or config
+    const thresholds = { power: 140 };
+    res.json(thresholds);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch thresholds' });
+  }
+});
+
+// Set custom thresholds
+app.post('/api/thresholds', async (req, res) => {
+  const { power } = req.body;
+  if (typeof power !== 'number') {
+    return res.status(400).json({ error: 'Invalid power threshold' });
+  }
+  try {
+    // Placeholder: save thresholds to database or config
+    console.log(`Custom power threshold set to ${power}`);
+    res.json({ message: 'Threshold updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update thresholds' });
+  }
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`Backend server running on port ${port}`);
 });
