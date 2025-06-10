@@ -37,6 +37,21 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
+// Get current user info endpoint
+app.get('/api/user', async (req, res) => {
+  try {
+    // For demo, return a static user or fetch from DB if authentication is implemented
+    const user = await User.findOne({ where: { id: 1 } }); // Adjust as needed
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ name: user.name || 'Demo User', email: user.email });
+  } catch (error) {
+    console.error('Get user error:', error);
+    res.status(500).json({ error: 'Failed to fetch user data' });
+  }
+});
+
 // Login endpoint
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
