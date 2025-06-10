@@ -37,6 +37,8 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
+
+
 // Get current user info endpoint
 app.get('/api/user', async (req, res) => {
   try {
